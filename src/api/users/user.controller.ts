@@ -8,11 +8,11 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/users.dto';
-import { User } from './users.entity';
-import { UserService } from './users.service';
+import { User } from './user.entity';
+import { UserService } from './user.service';
 
 @Controller('user')
-export class UsersController {
+export class UserController {
   @Inject(UserService)
   private readonly service: UserService;
 
