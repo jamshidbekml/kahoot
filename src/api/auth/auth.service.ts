@@ -1,6 +1,5 @@
 import {
   Injectable,
-  NotFoundException,
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -40,9 +39,6 @@ export class AuthService {
   }
 
   async signUp(body: CreateUserDto): Promise<any> {
-    const user = await this.userService.getByEmail(body.email);
-    if (user) throw new BadRequestException('Email already in use');
-
     const newUser = await this.userService.createUser(body);
 
     const payload = {
