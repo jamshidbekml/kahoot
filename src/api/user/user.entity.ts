@@ -20,6 +20,12 @@ export class User {
   @Column({ type: 'varchar', length: 120 })
   public password: string;
 
+  @Column({ type: 'varchar', length: 120 })
+  public resetToken: string;
+
+  @CreateDateColumn({ type: 'timestamp', nullable: true })
+  public resetTokenExpires: Date;
+
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt!: Date;
 

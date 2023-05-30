@@ -9,6 +9,7 @@ import { compareHash, generateHash } from '../../shared/utils/bcrypt';
 import { MailService } from '../mail/mail.service';
 import { generateToken } from '../../shared/utils/token-generator';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import * as moment from 'moment';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,7 @@ export class AuthService {
     };
     return {
       access_token: await this.jwtService.signAsync(payload),
-      user: { email: user.name, id: user.id },
+      user: { email: user.email, id: user.id },
     };
   }
 
