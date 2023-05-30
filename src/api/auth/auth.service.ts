@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compareHash } from '../../shared/utils/bcrypt';
 import { MailService } from '../mail/mail.service';
 import { generateToken } from '../../shared/utils/token-generator';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -38,23 +39,19 @@ export class AuthService {
     };
   }
 
-  async signUp(email: string, password: string, name: string): Promise<any> {
-    const user = await this.userService.getByEmail(email);
+  async signUp(body: CreateUserDto): Promise<any> {
+    const user = await this.userService.getByEmail(body.email);
     if (user) throw new BadRequestException('Email already in use');
 
-    const newUser = await this.userService.createUser({
-      email,
-      password,
-      name,
-    });
+    const newUser = await this.userService.createUser(body);
 
     const payload = {
-      email: email,
+      email: newUser.email,
       sub: newUser.id,
     };
     return {
       access_token: await this.jwtService.signAsync(payload),
-      user: { email, id: newUser.id },
+      user: { email: newUser.email, id: newUser.id },
     };
   }
 

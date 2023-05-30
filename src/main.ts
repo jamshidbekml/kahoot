@@ -10,6 +10,7 @@ async function bootstrap() {
   const port: number = config.get<number>('PORT');
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.setGlobalPrefix('api/v1');
 
   await app.listen(port, () => {
     console.log('[WEB]', config.get<string>('BASE_URL'));
