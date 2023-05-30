@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { compareHash } from '../../shared/utils/bcrypt';
+import { compareHash, generateHash } from '../../shared/utils/bcrypt';
 import { MailService } from '../mail/mail.service';
 import { generateToken } from '../../shared/utils/token-generator';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -39,6 +39,7 @@ export class AuthService {
   }
 
   async signUp(body: CreateUserDto): Promise<any> {
+    body.password = await generateHash(body.password);
     const newUser = await this.userService.createUser(body);
 
     const payload = {
