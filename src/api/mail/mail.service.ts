@@ -7,7 +7,7 @@ export class MailService {
   constructor(private mailerService: MailerService) {}
 
   async sendUserConfirmation(user: User, token: string) {
-    const url = `example.com/auth/confirm?token=${token}`;
+    const url = `http://localhost:3000/api/v1/auth/reset-password?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,

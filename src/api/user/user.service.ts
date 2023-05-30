@@ -4,9 +4,11 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { generateHash } from 'src/shared/utils/bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -29,6 +31,19 @@ export class UserService {
     return user;
   }
 
+  public async findByToken(token: string): Promise<User> {
+    const user = await this.repository.findOne({
+      where: {
+        resetToken: token,
+        resetTokenExpires: MoreThan(new Date()),
+      },
+    });
+
+    if (!user) throw new BadRequestException('Invalid or expired token');
+
+    return user;
+  }
+
   public async createUser(values: CreateUserDto): Promise<User> {
     const user = await this.repository.findOne({
       where: {
@@ -43,5 +58,23 @@ export class UserService {
     Object.assign(newUser, values);
 
     return this.repository.save(newUser);
+  }
+
+  public async update(id: number, values: UpdateUserDto): Promise<User> {
+    const user = await this.repository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    if (values.password) {
+      values.password = await generateHash(values.password);
+    } else values.password = user.password;
+
+    Object.assign(user, values);
+
+    return await this.repository.save(user);
   }
 }

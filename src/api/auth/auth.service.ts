@@ -53,11 +53,29 @@ export class AuthService {
     };
   }
 
-  async resetPassword(email: string): Promise<any> {
+  async forgotPassword(email: string): Promise<any> {
     const user = await this.userService.getByEmail(email);
 
     if (!user) throw new UnauthorizedException('User not found');
     const token = await generateToken();
+    const expiresIn = moment().add(1, 'hour').toDate();
+
+    await this.userService.update(user.id, {
+      resetToken: token,
+      resetTokenExpires: expiresIn,
+    });
     this.mailService.sendUserConfirmation(user, token);
+  }
+
+  async resetPassword(password: string, token: string): Promise<any> {
+    const user = await this.userService.getByEmail(token);
+
+    if (!user) throw new UnauthorizedException('User not found');
+
+    await this.userService.update(user.id, {
+      password,
+    });
+
+    return { message: 'Password updated successfully' };
   }
 }
