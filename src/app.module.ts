@@ -6,6 +6,10 @@ import { AppService } from './app.service';
 import { getEnvPath } from './common/helper/env.helper';
 import { TypeOrmConfigService } from './shared/typeorm/typeorm.service';
 import { ApiModule } from './api/api.module';
+import { QuizController } from './—no-spec/api/quiz/quiz.controller';
+import { Controller } from './—no-spec/api/quiz/.controller';
+import { QuizService } from './—no-spec/api/quiz/quiz.service';
+import { QuizController } from './—no-spec/api/quiz/quiz.controller';
 
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
@@ -15,7 +19,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
     ApiModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, QuizController, Controller],
+  providers: [AppService, QuizService],
 })
 export class AppModule {}
