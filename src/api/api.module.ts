@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './users/user.module';
+import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { SocketGateway } from './socket/socket.getaway';
 import { MailService } from './mail/mail.service';
